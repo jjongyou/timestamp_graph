@@ -4,7 +4,7 @@ import rclpy
 import time
 from rclpy.node import Node
 from ichthus_msgs.msg import Common
-from std_msgs.msg import Float64
+from std_msgs.msg import Int32
 import matplotlib.pyplot as plt
 
 
@@ -16,6 +16,8 @@ class Steer_graph(Node):
       Common, "ref_ang", self.ref_callback, 1)
     self.whl_ang_subs = self.create_subscription(
       Common, "cur_ang", self.str_callback, 1)
+    self.pid_off = self.create_subscription(
+      Int32, "external_cmd", self.extern_callback, 1)
     self.start_flag = False
     self.start_time = 0
     self.str_ang_axis = []
@@ -58,6 +60,12 @@ class Steer_graph(Node):
     self.ref_ang = -data.data
     self.ref_ang_time = data.time
 
+  def extern_callback(self, data):
+    pid_off = 3
+    if data.data == pid_off:
+      plt.plot(self.str_time_axis, self.ref_ang_axis, color="red", label="Ref")
+      plt.plot(self.str_time_axis, self.str_ang_axis, color="black", label="Vel")
+      plt.savefig(str(time.time()) + ".png");
 
 def main(args=None):
   rclpy.init(args=args)
