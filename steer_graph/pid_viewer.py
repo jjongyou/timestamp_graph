@@ -48,7 +48,7 @@ class Steer_graph(Node):
     plt.plot(self.ref_str_time_axis, self.ref_ang_axis, color="red", label="Ref")
     plt.plot(self.cur_str_time_axis, self.str_ang_axis, color="black", label="Vel")
     plt.draw()
-    plt.pause(0.2)
+    plt.pause(0.001)
     self.fig.clear()
 
   def ref_callback(self, data):
